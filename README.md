@@ -1,5 +1,8 @@
 # quran
 This project is an experiment to create a Quran website using the API source https://alquran.cloud/
+
+Demo: https://quran.rendypermana.com/
+
 ## Project setup
 ```
 npm install
