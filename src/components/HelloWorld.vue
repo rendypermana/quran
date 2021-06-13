@@ -32,10 +32,21 @@
 </template>
 
 <script>
+import { RepositoryAPI } from '@/api/api_repository'
+const quran = RepositoryAPI.get('quran')
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  mounted(){
+    quran.quranEdition()
+    .then(response =>{
+      console.log(response)
+    })
+    .catch(e =>{
+      console.log(e)
+    })
   }
 }
 </script>
