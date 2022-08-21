@@ -23,6 +23,26 @@ const routes = [
         path: 'al-quran',
         name: 'SemuaSurat',
         component: () => import('@/views/SemuaSurat.vue'),
+      },
+      {
+        path: 'daftar-ayat-saya',
+        name: 'AyatLists',
+        component: () => import('@/views/AyatLists.vue'),
+      },
+      {
+        path: 'penanda-saya',
+        name: 'PenandaBaca',
+        component: () => import('@/views/PenandaBaca.vue'),
+      },
+      {
+        path: 'pencarian',
+        name: 'Pencarian',
+        component: () => import('@/views/Pencarian.vue'),
+      },
+      {
+        path: 'ayat-untuk-kamu',
+        name: 'RandomAyat',
+        component: () => import('@/views/RandomAyat.vue'),
       }
     ]
   }

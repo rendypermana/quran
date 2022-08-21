@@ -206,6 +206,14 @@ a:hover{
     background-color: var(--white)!important;
     padding: 0px 15px!important;
 }
+/* .title.tunjuk {
+    margin-top: 80px;
+} */
+.logo-app {
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--blue);
+}
 .surah {
     margin-top: 70px;
 }
@@ -214,7 +222,9 @@ a:hover{
 }
 .ayat {
     font-size: 27px;
-    padding-bottom: 15px;
+    padding: 11px 8px;
+    position: relative;
+    /* z-index: 0; */
 }
 .ayat .arab:hover{
     color: var(--blue);
@@ -223,11 +233,24 @@ a:hover{
     font-size: 12px;
     font-family: 'Titillum';
 }
-.arab .no{
+.ayat .menu-poper {
+    position: absolute;
+    left: -45px;
+    z-index: -1;
+}
+.latin .no {
     font-size: 10px;
     font-family: 'Titillum';
-    padding: 2px 7px 2px 7px;
-    border: 1px solid #000;
+    padding: 4px 7px 4px 7px;
+    border: 1px solid var(--blue);
+    border-radius: 45px;
+}
+.arab .no{
+    position: relative;
+    font-size: 10px;
+    font-family: 'Titillum';
+    padding: 4px 7px 4px 7px;
+    border: 1px solid var(--blue);
     border-radius: 45px;
 }
 .judul-surat {
@@ -259,6 +282,9 @@ a:hover{
     padding: 10px 5px 10px 5px!important;
     background-color: var(--white)!important;
 }
+.navbarOnRandom {
+    margin-top: 0px!important;
+}
 /* Player */
 .player{
     background-color: var(--white);
@@ -267,6 +293,7 @@ a:hover{
     width: 100%;
     border-top: 1px solid var(--grey);
     bottom: 0;
+    z-index: 9;
 }
 .player-area{
     text-align: center;
@@ -290,7 +317,7 @@ a:hover{
     padding: 10px 10px;
 }
 .mainkan{
-    padding: 10px 10px;
+    padding: 10px 12px;
     border: 1px solid;
     border-radius: 45px;
     cursor: pointer;
@@ -298,8 +325,18 @@ a:hover{
 .mainkan:hover{
     color: var(--blue);
 }
+.pause {
+    padding: 10px 13px;
+    border: 1px solid;
+    border-radius: 45px;
+    cursor: pointer;
+}
+.pause:hover {
+    color: var(--blue);
+}
 .ayat-active{
     color: var(--blue);
+    background-color: rgb(252, 252, 252);
 }
 .pop-ayat{
     text-align: right;

@@ -3,7 +3,14 @@
         <mu-container>
             <div class="pencarian">
                 <label class="label">Pencarian</label>
-                <v-select :options="option" :reduce="option => option.number" label="surah" v-model="pilih" class="form-cari" placeholder="Cari Surah"></v-select>
+                <v-select 
+                    :options="option" 
+                    :reduce="option => option.number" 
+                    label="surah" 
+                    v-model="pilih" 
+                    class="form-cari" 
+                    placeholder="Cari Surah">
+                </v-select>
                 <div class="text-besar">
                     Al Quran Lengkap <router-link :to="{name:'SemuaSurat'}">[Klik Disini]</router-link>
                 </div>

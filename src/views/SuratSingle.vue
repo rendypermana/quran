@@ -21,9 +21,24 @@
                     <mu-card>
                         <mu-card-text>
                             <div class="area-ayat">
-                                <div :id="'ayat_'+item.no" class="ayat" :class="ayatAktif == item.numberInSurah? 'ayat-active' : ''" v-for="(item,index) in ayat" :key="index">
-                                    <div class="arab tunjuk-play"  @click="playSound(index, item.numberInSurah)">{{item.arab}} <span class="no">{{item.numberInSurah}}</span></div>
-                                    <div class="latin">{{item.latin}}</div>
+                                <center 
+                                    style="font-size: 27px; padding-bottom: 20px;"
+                                    v-if="this.$route.params.number != 1 && this.$route.params.number != 9"
+                                >
+                                   سْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
+                                </center>
+                                <div :id="'ayat_'+item.no" class="ayat" :class="ayatAktif == item.numberInSurah? 'ayat-active' : `sini-${item.no}`" v-for="(item,index) in ayat" :key="index">
+                                    <div class="arab tunjuk-play"  @click="playSound(index, item.numberInSurah)">{{item.arab}} <span class="no">{{arabicNumbering(item.numberInSurah)}}</span></div>
+                                    <div class="latin">
+                                        {{item.latin}} 
+                                        <span>({{item.numberInSurah}})</span>
+                                    </div>
+                                    <div class="menu-poper" :id="'poper_'+item.no">
+                                        <MenuPoper 
+                                            v-if="ayatAktif == item.numberInSurah"
+                                            :dataAyat="item"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </mu-card-text>
@@ -36,16 +51,16 @@
                 <div class="player-area">
                     <div class="controller-nav">
                         <div class="prevous">
-                            <mu-icon value="skip_previous" class="tunjuk-play" @click="prevSong()"></mu-icon>
+                            <font-awesome-icon icon="fa-solid fa-backward-step" class="tunjuk-play" @click="prevSong()" />
                         </div>
                         <div class="play" @click="pauseAudio()" v-if="isPlaying">
-                            <mu-icon value="pause" class="mainkan"></mu-icon>
+                            <font-awesome-icon icon="fa-solid fa-pause" class="pause" />
                         </div>
                         <div class="play" @click="playAudio()" v-else>
-                            <mu-icon value="play_arrow" class="mainkan"></mu-icon>
+                            <font-awesome-icon icon="fa-solid fa-play" class="mainkan" />
                         </div>
                         <div class="next">
-                            <mu-icon value="skip_next" class="tunjuk-play" @click="nextSong()"></mu-icon>
+                            <font-awesome-icon icon="fa-solid fa-forward-step" class="tunjuk-play" @click="nextSong()" />
                         </div>
                     </div>
                 </div>
@@ -54,10 +69,10 @@
         <mu-dialog :open.sync="popUp">
             <div class="pop-ayat">
                 <div class="arab">
-                    {{perAyat.arab}} <span class="no">{{perAyat.numberInSurah}}</span>
+                    {{perAyat.arab}} <span class="no">{{arabicNumbering(perAyat.numberInSurah)}}</span>
                 </div>
                 <div class="latin">
-                    {{perAyat.latin}}
+                    {{perAyat.latin}} <span>{{perAyat.numberInSurah}}</span>
                 </div>
             </div>
             <mu-button slot="actions" flat color="primary" @click="closePopUp">Tutup</mu-button>
@@ -65,8 +80,10 @@
     </div>
 </template>
 <script>
+import MenuPoper from "@/components/MenuPoper"
 import { RepositoryAPI } from '@/api/api_repository'
 const quran = RepositoryAPI.get('quran')
+
 export default {
     data(){
         return{
@@ -83,13 +100,15 @@ export default {
             checkingCurrentPositionInTrack:"",
             ayatAktif: 1,
             popUp: false,
-            perAyat: []
+            perAyat: [],
         }
     },
-    mounted(){
+    components: {
+        MenuPoper
+    },
+    created(){
         let number = this.$route.params.number
         this.getData(number)
-        
     },
     methods:{
         async getData(id){
@@ -115,15 +134,15 @@ export default {
                     this.ayat.push(p);
                     this.musicPlaylist.push(p);
                 }
+                this.splitBismillah()
                 this.loading = false
-                this.getCurrentSong()
+                this.getCurrentSong();
             }catch(e){
                 console.log(e)
             }
         },
         getSound(value){
             return "https://cdn.islamic.network/quran/audio/128/ar.alafasy/"+ value +".mp3"
-  
         },
         playSound(value, aktif){
             this.currentSong = value - 1
@@ -132,30 +151,30 @@ export default {
             this.changeSong()
         },
 
-
-        //    playlist
         closePopUp(){
             this.popUp = false
         },
         scrollAyat(value){
             let elmnt = document.getElementById(value);
-            // elmnt.scrollIntoView({behavior: "smooth"});
-            // console.log(elmnt)
-
             var bounding = elmnt.getBoundingClientRect();
-
             if (bounding.top >= 0 && bounding.left >= 0 && bounding.right <= window.innerWidth && bounding.bottom <= window.innerHeight) {
                 this.popUp = false
             } else {
                 this.popUp = true
             }
-            
+        },
+        poperPosition(value) {
+            const highEl = document.getElementById('ayat_'+value);
+            const highArea = highEl.getBoundingClientRect();
+            const heightElm = Math.floor(highArea.height)
+            document.getElementById('poper_'+value).style.bottom = `${(heightElm / 2) - 15}px`;
+            document.getElementById('poper_'+value).style.zIndex = `1`;
         },
         getCurrentSong(){
             this.audioFile = new Audio(this.musicPlaylist[this.currentSong].urlSound)
             this.scrollAyat('ayat_'+this.musicPlaylist[this.currentSong].no)
+            this.poperPosition(this.musicPlaylist[this.currentSong].no)
             this.perAyat = this.musicPlaylist[this.currentSong]
-           
         },
         changeSong(){
             if(this.currentSong+1 < this.musicPlaylist.length){
@@ -211,12 +230,25 @@ export default {
 			this.audio.pause();
 			this.isPlaying = false;
 		},
-        
+        arabicNumbering(value) {
+            const ayat_ = String(value)
+            let id= ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+            return ayat_.replace(/[0-9]/g, function(w){
+                return id[+w]
+            });
+        },
+        splitBismillah(){
+            if (this.$route.params.number != 1 && this.$route.params.number != 9 ) {
+                const firstAyat = this.ayat[0];
+                const replaceAyat = String(firstAyat.arab).slice(39);
+                this.ayat[0].arab = replaceAyat;
+            }
+        }
     },
     beforeDestroy: function() {
 		this.audioFile.removeEventListener("ended", this.handleEnded);
 		this.audioFile.removeEventListener("loadedmetadata", this.handleEnded);
 		clearTimeout(this.checkingCurrentPositionInTrack);
-	}
+	},
 }
 </script>

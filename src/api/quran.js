@@ -12,5 +12,11 @@ export default {
     },
     allQuran(){
         return json.get('v1/quran/ar.asad');
-    }
+    },
+    searchKeyword(keyword) {
+        return json.get('v1/search/'+ keyword +'/all/id');
+    },
+    suratByAyat(ayat) {
+        return json.get('v1/ayah/'+ ayat +'/editions/id.indonesian,id.pickthall');
+    },
 }
